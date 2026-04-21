@@ -4,183 +4,426 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Peodager | Premium E-Commerce</title>
-    <link rel="stylesheet" href="index.css">
-    <!-- Fuse.js for fuzzy search -->
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+    <style>
+
+    </style>
 </head>
 <body>
-    <div class="app">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">✨ PEODAGER</div>
-                <div class="nav-links">
-                    <button class="nav-btn" data-page="shop">Shop</button
-                    <div class="cart-icon-wrapper" id="cartIconBtn">
-                        🛒 <span class="cart-badge" id="cartCount">0</span>
-                    </div>
+    <div class="navbar">
+        <div class="container nav-inner">
+            <div class="logo">✨ PEODAGER</div>
+            <div class="nav-links">
+                <a class="nav-link" href="#" data-page="home">Home</a>
+                <a class="nav-link" href="#" data-page="shop">Shop</a>
+                <a class="nav-link" href="#" data-page="about">About Us</a>
+                <a class="nav-link" href="#" data-page="contact">Contact</a>
+                <div class="cart-icon" id="cartIcon">
+                    🛒 <span id="cartCountBadge">0</span>
                 </div>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- SHOP PAGE -->
-            <div id="shopPage" class="page active">
-                <div class="shop-layout">
-                    <!-- Sidebar Filters -->
-                    <aside class="filters-sidebar">
-                        <h3>Filters</h3>
-                        
-                        <!-- Live Search -->
-                        <div class="search-section">
-                            <label>🔍 Search Products</label>
-                            <input type="text" id="searchInput" placeholder="Search by name, category, description...">
-                            <div id="suggestionsDropdown" class="suggestions-dropdown"></div>
-                        </div>
-
-                        <!-- Category Filter -->
-                        <div class="filter-group">
-                            <label>📁 Category</label>
-                            <select id="categoryFilter">
-                                <option value="all">All Categories</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="fashion">Fashion</option>
-                                <option value="home">Home & Living</option>
-                                <option value="accessories">Accessories</option>
-                            </select>
-                        </div>
-
-                        <!-- Price Range -->
-                        <div class="filter-group">
-                            <label>💰 Price Range</label>
-                            <div class="price-range">
-                                <input type="number" id="minPrice" placeholder="Min $" step="1">
-                                <span>-</span>
-                                <input type="number" id="maxPrice" placeholder="Max $" step="1">
-                            </div>
-                        </div>
-
-                        <!-- Sorting -->
-                        <div class="filter-group">
-                            <label>⚡ Sort By</label>
-                            <select id="sortBy">
-                                <option value="default">Default</option>
-                                <option value="price_asc">Price: Low to High</option>
-                                <option value="price_desc">Price: High to Low</option>
-                                <option value="name_asc">Name: A to Z</option>
-                            </select>
-                        </div>
-
-                        <button id="resetFiltersBtn" class="btn-secondary">Reset Filters</button>
-                    </aside>
-
-                    <!-- Product Grid -->
-                    <div class="products-area">
-                        <div class="products-header">
-                            <h2>Our Collection</h2>
-                            <span id="productCount" class="product-count">0 products</span>
-                        </div>
-                        <div id="productGrid" class="product-grid"></div>
-                        <div id="noResultsMsg" class="no-results" style="display: none;">
-                            <p>🔍 No products found matching your criteria.</p>
-                            <button class="btn-primary" id="clearSearchBtn">Clear Filters</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ADMIN DASHBOARD PAGE -->
-            <div id="adminPage" class="page">
-                <div class="admin-container">
-                    <h2>🛠️ Admin Dashboard</h2>
-                    
-                    <!-- Product Management -->
-                    <div class="admin-section">
-                        <h3>Product Management</h3>
-                        <button id="addProductBtn" class="btn-primary">+ Add New Product</button>
-                        
-                        <div class="table-wrapper">
-                            <table class="admin-table" id="productTable">
-                                <thead>
-                                    <tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
-                                </thead>
-                                <tbody id="productTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Order Management (Mock) -->
-                    <div class="admin-section">
-                        <h3>📦 Order Management</h3>
-                        <div class="order-stats">
-                            <div class="stat-card">Pending: <span id="pendingOrders">3</span></div>
-                            <div class="stat-card">Processing: <span id="processingOrders">2</span></div>
-                            <div class="stat-card">Completed: <span id="completedOrders">5</span></div>
-                        </div>
-                        <div class="table-wrapper">
-                            <table class="admin-table">
-                                <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
-                                <tbody id="mockOrdersTable"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Cart Sidebar -->
-        <div id="cartSidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3>Your Cart 🛍️</h3>
-                <button class="close-cart" id="closeCartBtn">&times;</button>
-            </div>
-            <div id="cartItemsList" class="cart-items"></div>
-            <div class="cart-footer">
-                <div class="cart-total">Subtotal: $<span id="cartTotal">0.00</span></div>
-                <button id="checkoutBtn" class="btn-primary">Proceed to Checkout</button>
-            </div>
-        </div>
-        <div id="cartOverlay" class="cart-overlay"></div>
-
-        <!-- Checkout Modal -->
-        <div id="checkoutModal" class="modal">
-            <div class="modal-content">
-                <span class="modal-close">&times;</span>
-                <h2>Complete Your Order</h2>
-                <form id="checkoutForm">
-                    <input type="text" id="customerName" placeholder="Full Name" required>
-                    <input type="tel" id="customerPhone" placeholder="WhatsApp Number (e.g., 2348012345678)" required>
-                    <textarea id="deliveryAddress" placeholder="Delivery Address" rows="3" required></textarea>
-                    <div id="checkoutSummary" class="checkout-summary"></div>
-                    <button type="submit" class="btn-whatsapp">📲 Send Order via WhatsApp</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Add/Edit Product Modal -->
-        <div id="productModal" class="modal">
-            <div class="modal-content">
-                <span class="modal-close product-modal-close">&times;</span>
-                <h2 id="productModalTitle">Add Product</h2>
-                <form id="productForm">
-                    <input type="hidden" id="editProductId">
-                    <input type="text" id="productName" placeholder="Product Name" required>
-                    <select id="productCategory" required>
-                        <option value="electronics">Electronics</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="home">Home & Living</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
-                    <input type="number" id="productPrice" placeholder="Price ($)" step="0.01" required>
-                    <textarea id="productDescription" placeholder="Description" rows="2" required></textarea>
-                    <input type="text" id="productImage" placeholder="Image URL (placeholder supported)">
-                    <button type="submit" class="btn-primary">Save Product</button>
-                </form>
             </div>
         </div>
     </div>
 
-    <script src="app.js"><button class="nav-btn" data-page="admin">Admin</button></script>
+    <main class="container">
+        <!-- HOME PAGE -->
+        <div id="homePage" class="page active-page">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Style meets innovation</h1>
+                    <p>Discover premium products crafted for modern life. Free shipping on orders.</p>
+                    <button class="btn-primary" id="exploreBtn">Explore Collection →</button>
+                </div>
+                <div style="font-size: 6rem;">✨</div>
+            </div>
+            <div class="section-title">✨ Featured Items</div>
+            <div id="featuredGrid" class="product-grid"></div>
+        </div>
+
+        <!-- SHOP PAGE (Hidden by default) -->
+        <div id="shopPage" class="page">
+            <div class="section-title">🛍️ All Products</div>
+            <div id="productGrid" class="product-grid"></div>
+        </div>
+
+        <!-- ABOUT PAGE (Hidden by default) -->
+        <div id="aboutPage" class="page">
+            <div class="hero" style="background: linear-gradient(135deg, var(--indigo-50), white);">
+                <div class="hero-content">
+                    <h1>About Peodager</h1>
+                    <p>We're on a mission to redefine online shopping with quality products and exceptional service.</p>
+                </div>
+            </div>
+            <div style="background: white; border-radius: 1rem; padding: 2rem; margin: 2rem 0;">
+                <h2 style="color: var(--indigo-600); margin-bottom: 1rem;">Our Story</h2>
+                <p style="margin-bottom: 1rem;">Founded in 2020, Peodager started as a small passion project with a simple goal: to bring high-quality, affordable products to customers worldwide. What began in a small garage has grown into a trusted e-commerce destination serving thousands of happy customers.</p>
+                <p>We believe that great design and quality shouldn't come with a premium price tag. That's why we work directly with manufacturers to curate products that combine style, functionality, and value.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 2rem;">🎯</div>
+                    <h3 style="margin: 0.5rem 0;">Our Mission</h3>
+                    <p style="color: var(--gray-600);">To provide exceptional products that enhance daily life while maintaining affordability and sustainability.</p>
+                </div>
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 2rem;">💎</div>
+                    <h3 style="margin: 0.5rem 0;">Our Values</h3>
+                    <p style="color: var(--gray-600);">Quality, integrity, customer-first approach, and continuous innovation drive everything we do.</p>
+                </div>
+                <div style="text-align: center; padding: 1.5rem;">
+                    <div style="font-size: 2rem;">🌍</div>
+                    <h3 style="margin: 0.5rem 0;">Our Promise</h3>
+                    <p style="color: var(--gray-600);">100% satisfaction guaranteed with easy returns and dedicated customer support.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT PAGE (Hidden by default) -->
+        <div id="contactPage" class="page">
+            <div class="hero" style="background: linear-gradient(135deg, var(--indigo-50), white);">
+                <div class="hero-content">
+                    <h1>Get in Touch</h1>
+                    <p>Have questions? We'd love to hear from you. Send us a message and we'll respond within 24 hours.</p>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="background: white; padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow-md);">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📧</div>
+                    <h3>Email Us</h3>
+                    <p style="color: var(--gray-600); margin: 0.5rem 0;">support@peodager.com</p>
+                    <p style="color: var(--gray-600);">sales@peodager.com</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow-md);">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📞</div>
+                    <h3>Call Us</h3>
+                    <p style="color: var(--gray-600); margin: 0.5rem 0;">+234 801 234 5678</p>
+                    <p style="color: var(--gray-600);">Mon-Fri, 9am - 6pm</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow-md);">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📍</div>
+                    <h3>Visit Us</h3>
+                    <p style="color: var(--gray-600); margin: 0.5rem 0;">123 Commerce Street</p>
+                    <p style="color: var(--gray-600);">Lagos, Nigeria 100001</p>
+                </div>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow-md); margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Send a Message</h3>
+                <form id="contactForm">
+                    <input type="text" placeholder="Your Name" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--gray-200); border-radius: 0.5rem;">
+                    <input type="email" placeholder="Your Email" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--gray-200); border-radius: 0.5rem;">
+                    <textarea placeholder="Your Message" rows="4" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--gray-200); border-radius: 0.5rem;"></textarea>
+                    <button type="submit" class="btn-primary">Send Message →</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart 🛍️</h3>
+            <button class="close-cart" id="closeCartBtn">&times;</button>
+        </div>
+        <div id="cartItemsList" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">Subtotal: $<span id="cartTotal">0.00</span></div>
+            <button id="checkoutBtn" class="btn-primary">Proceed to Checkout</button>
+        </div>
+    </div>
+    <div id="cartOverlay" class="cart-overlay"></div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <h3 class="footer-logo">✨ PEODAGER</h3>
+                        <p class="footer-about">
+                            Premium quality products delivered to your doorstep with care and speed. 
+                            We're committed to providing exceptional value and customer satisfaction.
+                        </p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <circle cx="12" cy="12" r="4"/>
+                                <line x1="18" y1="6" x2="18.01" y2="6"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-page="shop">Shop</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                        <li><a href="#">Cart</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="footer-heading">Support & Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns & Refunds</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4 class="footer-heading">Newsletter</h4>
+                    <p class="newsletter-text">Subscribe to get special offers, free giveaways, and exclusive deals.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <div class="form-group">
+                            <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                            <button type="submit" class="subscribe-btn">Subscribe →</button>
+                        </div>
+                        <small class="newsletter-note">No spam, unsubscribe anytime.</small>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">© 2025 Peodager. All rights reserved. | Designed with ❤️ for modern e-commerce</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // COMPLETE APPLICATION LOGIC
+        // ============================================
+
+        // Product Data
+        const products = [
+            { id: 1, name: "Wireless Headphones", category: "electronics", price: 79.99, description: "Premium noise-cancelling headphones with 30hr battery life", image: "https://placehold.co/400x400/eef2ff/4f46e5?text=Headphones" },
+            { id: 2, name: "Leather Jacket", category: "fashion", price: 189.99, description: "Classic leather jacket, genuine material, timeless style", image: "https://placehold.co/400x400/eef2ff/4f46e5?text=Jacket" },
+            { id: 3, name: "Smart Desk Lamp", category: "home", price: 49.99, description: "Adjustable brightness, color temperature control", image: "https://placehold.co/400x400/eef2ff/4f46e5?text=Lamp" }
+        ];
+
+        // Cart Management
+        let cart = [];
+
+        function loadCart() {
+            const stored = localStorage.getItem('peodager_cart');
+            if (stored) cart = JSON.parse(stored);
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem('peodager_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function addToCart(product, quantity = 1) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity });
+            }
+            saveCart();
+            showToast(`${product.name} added to cart!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            const item = cart.find(i => i.id === productId);
+            if (item && newQuantity > 0) {
+                item.quantity = newQuantity;
+            } else if (item && newQuantity <= 0) {
+                removeFromCart(productId);
+            }
+            saveCart();
+        }
+
+        function getCartTotal() {
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+        function getCartCount() {
+            return cart.reduce((count, item) => count + item.quantity, 0);
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCountBadge').innerText = getCartCount();
+            document.getElementById('cartTotal').innerText = getCartTotal().toFixed(2);
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsList');
+            if (cart.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:2rem;">Your cart is empty 🛒</div>';
+                return;
+            }
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img class="cart-item-img" src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <strong>${item.name}</strong>
+                        <div>$${item.price.toFixed(2)}</div>
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            <button class="qty-btn" onclick="removeFromCart(${item.id})" style="background:#fee2e2;">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // Render Products
+        function renderFeaturedProducts() {
+            const grid = document.getElementById('featuredGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img class="product-img" src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')}, 1)">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAllProducts() {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img class="product-img" src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')}, 1)">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(`${pageId}Page`).classList.add('active-page');
+            
+            if (pageId === 'shop') renderAllProducts();
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCart();
+            renderFeaturedProducts();
+            
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.dataset.page;
+                    if (page) showPage(page);
+                });
+            });
+            
+            // Footer links
+            document.querySelectorAll('.footer-links a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (link.dataset.page) showPage(link.dataset.page);
+                });
+            });
+            
+            // Explore button
+            document.getElementById('exploreBtn').addEventListener('click', () => {
+                showPage('shop');
+            });
+            
+            // Cart icon
+            document.getElementById('cartIcon').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.add('open');
+                document.getElementById('cartOverlay').classList.add('active');
+            });
+            
+            document.getElementById('closeCartBtn').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.remove('open');
+                document.getElementById('cartOverlay').classList.remove('active');
+            });
+            
+            document.getElementById('cartOverlay').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.remove('open');
+                document.getElementById('cartOverlay').classList.remove('active');
+            });
+            
+            // Newsletter
+            document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = e.target.querySelector('.newsletter-input').value;
+                if (email) {
+                    showToast(`Thanks for subscribing with ${email}!`);
+                    e.target.reset();
+                }
+            });
+            
+            // Contact form
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showToast('Message sent! We\'ll respond within 24 hours.');
+                    contactForm.reset();
+                });
+            }
+            
+            // Checkout
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.length === 0) {
+                    showToast('Your cart is empty!');
+                    return;
+                }
+                const itemsList = cart.map(item => `${item.name} x${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`).join('%0A');
+                const total = getCartTotal().toFixed(2);
+                const message = `🛍️ *PEODAGER ORDER*%0A%0A📦 Items:%0A${itemsList}%0A%0A💰 Total: $${total}%0A%0A🙏 Thank you for shopping with Peodager!`;
+                window.open(`https://wa.me/2349119426198?text=${message}`, '_blank');
+                showToast('Opening WhatsApp...');
+            });
+        });
+
+        // Make functions global
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.updateQuantity = updateQuantity;
+    </script>
 </body>
 </html>
