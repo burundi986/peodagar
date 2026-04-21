@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Peodager | Premium E-Commerce</title>
+    <link rel="stylesheet" href="index.css">
+    <!-- Fuse.js for fuzzy search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">✨ PEODAGER</div>
+                <div class="nav-links">
+                    <button class="nav-btn" data-page="shop">Shop</button
+                    <div class="cart-icon-wrapper" id="cartIconBtn">
+                        🛒 <span class="cart-badge" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- SHOP PAGE -->
+            <div id="shopPage" class="page active">
+                <div class="shop-layout">
+                    <!-- Sidebar Filters -->
+                    <aside class="filters-sidebar">
+                        <h3>Filters</h3>
+                        
+                        <!-- Live Search -->
+                        <div class="search-section">
+                            <label>🔍 Search Products</label>
+                            <input type="text" id="searchInput" placeholder="Search by name, category, description...">
+                            <div id="suggestionsDropdown" class="suggestions-dropdown"></div>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="filter-group">
+                            <label>📁 Category</label>
+                            <select id="categoryFilter">
+                                <option value="all">All Categories</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="home">Home & Living</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="filter-group">
+                            <label>💰 Price Range</label>
+                            <div class="price-range">
+                                <input type="number" id="minPrice" placeholder="Min $" step="1">
+                                <span>-</span>
+                                <input type="number" id="maxPrice" placeholder="Max $" step="1">
+                            </div>
+                        </div>
+
+                        <!-- Sorting -->
+                        <div class="filter-group">
+                            <label>⚡ Sort By</label>
+                            <select id="sortBy">
+                                <option value="default">Default</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="name_asc">Name: A to Z</option>
+                            </select>
+                        </div>
+
+                        <button id="resetFiltersBtn" class="btn-secondary">Reset Filters</button>
+                    </aside>
+
+                    <!-- Product Grid -->
+                    <div class="products-area">
+                        <div class="products-header">
+                            <h2>Our Collection</h2>
+                            <span id="productCount" class="product-count">0 products</span>
+                        </div>
+                        <div id="productGrid" class="product-grid"></div>
+                        <div id="noResultsMsg" class="no-results" style="display: none;">
+                            <p>🔍 No products found matching your criteria.</p>
+                            <button class="btn-primary" id="clearSearchBtn">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN DASHBOARD PAGE -->
+            <div id="adminPage" class="page">
+                <div class="admin-container">
+                    <h2>🛠️ Admin Dashboard</h2>
+                    
+                    <!-- Product Management -->
+                    <div class="admin-section">
+                        <h3>Product Management</h3>
+                        <button id="addProductBtn" class="btn-primary">+ Add New Product</button>
+                        
+                        <div class="table-wrapper">
+                            <table class="admin-table" id="productTable">
+                                <thead>
+                                    <tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="productTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Order Management (Mock) -->
+                    <div class="admin-section">
+                        <h3>📦 Order Management</h3>
+                        <div class="order-stats">
+                            <div class="stat-card">Pending: <span id="pendingOrders">3</span></div>
+                            <div class="stat-card">Processing: <span id="processingOrders">2</span></div>
+                            <div class="stat-card">Completed: <span id="completedOrders">5</span></div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="admin-table">
+                                <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody id="mockOrdersTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Your Cart 🛍️</h3>
+                <button class="close-cart" id="closeCartBtn">&times;</button>
+            </div>
+            <div id="cartItemsList" class="cart-items"></div>
+            <div class="cart-footer">
+                <div class="cart-total">Subtotal: $<span id="cartTotal">0.00</span></div>
+                <button id="checkoutBtn" class="btn-primary">Proceed to Checkout</button>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay"></div>
+
+        <!-- Checkout Modal -->
+        <div id="checkoutModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2>Complete Your Order</h2>
+                <form id="checkoutForm">
+                    <input type="text" id="customerName" placeholder="Full Name" required>
+                    <input type="tel" id="customerPhone" placeholder="WhatsApp Number (e.g., 2348012345678)" required>
+                    <textarea id="deliveryAddress" placeholder="Delivery Address" rows="3" required></textarea>
+                    <div id="checkoutSummary" class="checkout-summary"></div>
+                    <button type="submit" class="btn-whatsapp">📲 Send Order via WhatsApp</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit Product Modal -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close product-modal-close">&times;</span>
+                <h2 id="productModalTitle">Add Product</h2>
+                <form id="productForm">
+                    <input type="hidden" id="editProductId">
+                    <input type="text" id="productName" placeholder="Product Name" required>
+                    <select id="productCategory" required>
+                        <option value="electronics">Electronics</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="home">Home & Living</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                    <input type="number" id="productPrice" placeholder="Price ($)" step="0.01" required>
+                    <textarea id="productDescription" placeholder="Description" rows="2" required></textarea>
+                    <input type="text" id="productImage" placeholder="Image URL (placeholder supported)">
+                    <button type="submit" class="btn-primary">Save Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"><button class="nav-btn" data-page="admin">Admin</button></script>
+</body>
+</html>

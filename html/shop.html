@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shop</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../javascript/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- nav -->
+       <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">✨ PEODAGER</div>
+                <div class="nav-links">
+                    <button class="nav-btn" data-page="index.html">Home</button>
+                    <button class="nav-btn" data-page="shop">Shop</button>
+                    <button class="nav-btn" data-page="about-us">about-us</button>
+                    <div class="cart-icon-wrapper" id="cartIconBtn">
+                        🛒 <span class="cart-badge" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Main Content -->
+        <main class="main-content">
+            <!-- SHOP PAGE -->
+            <div id="shopPage" class="page active">
+                <div class="shop-layout">
+                    <!-- Sidebar Filters -->
+                    <aside class="filters-sidebar">
+                        <h3>Filters</h3>
+                        
+                        <!-- Live Search -->
+                        <div class="search-section">
+                            <label>🔍 Search Products</label>
+                            <input type="text" id="searchInput" placeholder="Search by name, category, description...">
+                            <div id="suggestionsDropdown" class="suggestions-dropdown"></div>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="filter-group">
+                            <label>📁 Category</label>
+                            <select id="categoryFilter">
+                                <option value="all">All Categories</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="home">Home & Living</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="filter-group">
+                            <label>💰 Price Range</label>
+                            <div class="price-range">
+                                <input type="number" id="minPrice" placeholder="Min $" step="1">
+                                <span>-</span>
+                                <input type="number" id="maxPrice" placeholder="Max $" step="1">
+                            </div>
+                        </div>
+
+                        <!-- Sorting -->
+                        <div class="filter-group">
+                            <label>⚡ Sort By</label>
+                            <select id="sortBy">
+                                <option value="default">Default</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="name_asc">Name: A to Z</option>
+                            </select>
+                        </div>
+
+                        <button id="resetFiltersBtn" class="btn-secondary">Reset Filters</button>
+                    </aside>
+
+                    <!-- Product Grid -->
+                    <div class="products-area">
+                        <div class="products-header">
+                            <h2>Our Collection</h2>
+                            <span id="productCount" class="product-count">0 products</span>
+                        </div>
+                        <div id="productGrid" class="product-grid"></div>
+                        <div id="noResultsMsg" class="no-results" style="display: none;">
+                            <p>🔍 No products found matching your criteria.</p>
+                            <button class="btn-primary" id="clearSearchBtn">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Your Cart 🛍️</h3>
+                <button class="close-cart" id="closeCartBtn">&times;</button>
+            </div>
+            <div id="cartItemsList" class="cart-items"></div>
+            <div class="cart-footer">
+                <div class="cart-total">Subtotal: $<span id="cartTotal">0.00</span></div>
+                <button id="checkoutBtn" class="btn-primary">Proceed to Checkout</button>
+            </div>
+        </div>
+        <div id="cartOverlay" class="cart-overlay"></div>
+
+                <div id="checkoutModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h2>Complete Your Order</h2>
+                <form id="checkoutForm">
+                    <input type="text" id="customerName" placeholder="Full Name" required>
+                    <input type="tel" id="customerPhone" placeholder="WhatsApp Number (e.g., 2348012345678)" required>
+                    <textarea id="deliveryAddress" placeholder="Delivery Address" rows="3" required></textarea>
+                    <div id="checkoutSummary" class="checkout-summary"></div>
+                    <button type="submit" class="btn-whatsapp">📲 Send Order via WhatsApp</button>
+                </form>
+            </div>
+        </div>
+        <footer class="site-footer">
+    <div class="footer-container">
+        <!-- 4-Column Grid Layout -->
+        <div class="footer-grid">
+            
+            <!-- Column 1: Brand/About -->
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">✨ PEODAGER</h3>
+                    <p class="footer-about">
+                        Premium quality products delivered to your doorstep with care and speed. 
+                        We're committed to providing exceptional value and customer satisfaction.
+                    </p>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <line x1="18" y1="6" x2="18.01" y2="6"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Pinterest">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M12 2a10 10 0 0 0-3.5 19.2c.1-.9.2-2.3.2-3.2 0-.9.6-3.2.6-3.2s-.2-.4-.2-1c0-1 .6-1.8 1.3-1.8.6 0 .9.5.9 1 0 .6-.4 1.6-.6 2.5-.1.7.4 1.3 1.1 1.3 1.4 0 2.4-1.8 2.4-3.8 0-1.6-1.1-2.8-3-2.8-2.2 0-3.5 1.6-3.5 3.4 0 .6.2 1.3.5 1.6.1.1.1.2.1.3-.1.3-.2 1-.2 1.1 0 .2-.1.2-.3.1-1-.4-1.6-1.6-1.6-2.8 0-2.2 1.8-4.8 5.5-4.8 2.9 0 5 2.1 5 4.8 0 3-1.7 5.2-4.2 5.2-.8 0-1.6-.4-1.9-1 0 0-.4 1.7-.5 2.1-.2.7-.7 1.4-1 1.9.8.3 1.7.4 2.5.4a10 10 0 0 0 0-20z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/wishlist">Wishlist</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/track-order">Track Order</a></li>
+                </ul>
+            </div>
+            
+            <!-- Column 3: Support/Legal -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Support & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/shipping-policy">Shipping Policy</a></li>
+                    <li><a href="/returns">Returns & Refunds</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            
+            <!-- Column 4: Newsletter -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Newsletter</h4>
+                <p class="newsletter-text">Subscribe to get special offers, free giveaways, and exclusive deals.</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <div class="form-group">
+                        <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                        <button type="submit" class="subscribe-btn">Subscribe →</button>
+                    </div>
+                    <small class="newsletter-note">No spam, unsubscribe anytime.</small>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Copyright Line -->
+        <div class="footer-bottom">
+            <p class="copyright">© 2025 Peodager. All rights reserved. | Designed with ❤️ for modern e-commerce</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
